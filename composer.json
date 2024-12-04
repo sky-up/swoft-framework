@@ -1,5 +1,5 @@
 {
-  "name": "swoft/framework",
+  "name": "swoft-fork/framework",
   "type": "library",
   "version": "v2.0.11",
   "keywords": [
@@ -9,20 +9,20 @@
     "swoft-framework"
   ],
   "description": "swoft framework component",
-  "homepage": "https://github.com/swoft-cloud/swoft-framework",
+  "homepage": "https://github.com/sky-up/swoft-framework",
   "license": "Apache-2.0",
   "require": {
-    "php": ">=7.1",
-    "swoft/config": "~2.0.0",
-    "swoft/annotation": "~2.0.0",
-    "swoft/bean": "~2.0.0",
-    "swoft/event": "~2.0.0",
-    "swoft/console": "~2.0.0",
-    "swoft/error": "~2.0.0",
-    "swoft/log": "~2.0.0",
-    "swoft/aop": "~2.0.0",
-    "swoft/server": "~2.0.0",
-    "swoft/stdlib": "~2.0.0"
+    "php": ">=8.0",
+    "swoft-fork/config": "~2.0.0",
+    "swoft-fork/annotation": "~2.0.0",
+    "swoft-fork/bean": "~2.0.0",
+    "swoft-fork/event": "~2.0.0",
+    "swoft-fork/console": "~2.0.0",
+    "swoft-fork/error": "~2.0.0",
+    "swoft-fork/log": "~2.0.0",
+    "swoft-fork/aop": "~2.0.0",
+    "swoft-fork/server": "~2.0.0",
+    "swoft-fork/stdlib": "~2.0.0"
   },
   "autoload": {
     "classmap": [
