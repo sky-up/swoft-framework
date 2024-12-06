@@ -16,7 +16,7 @@ Swoft Framework Component
 - composer command
 
 ```bash
-composer require swoft/framework
+composer require swoft-fork/framework
 ```
 
 ## Resources
