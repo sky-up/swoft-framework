@@ -1,7 +1,7 @@
 {
   "name": "swoft-fork/framework",
   "type": "library",
-  "version": "v2.0.11",
+  "version": "v2.1.0",
   "keywords": [
     "php",
     "swoole",
@@ -13,16 +13,16 @@
   "license": "Apache-2.0",
   "require": {
     "php": ">=8.0",
-    "swoft-fork/config": "~2.0.0",
-    "swoft-fork/annotation": "~2.0.0",
-    "swoft-fork/bean": "~2.0.0",
-    "swoft-fork/event": "~2.0.0",
-    "swoft-fork/console": "~2.0.0",
-    "swoft-fork/error": "~2.0.0",
-    "swoft-fork/log": "~2.0.0",
-    "swoft-fork/aop": "~2.0.0",
-    "swoft-fork/server": "~2.0.0",
-    "swoft-fork/stdlib": "~2.0.0"
+    "swoft-fork/config": "~2.1.0",
+    "swoft-fork/annotation": "~2.1.0",
+    "swoft-fork/bean": "~2.1.0",
+    "swoft-fork/event": "~2.1.0",
+    "swoft-fork/console": "~2.1.0",
+    "swoft-fork/error": "~2.1.0",
+    "swoft-fork/log": "~2.1.0",
+    "swoft-fork/aop": "~2.1.0",
+    "swoft-fork/server": "~2.1.0",
+    "swoft-fork/stdlib": "~2.1.0"
   },
   "autoload": {
     "classmap": [
