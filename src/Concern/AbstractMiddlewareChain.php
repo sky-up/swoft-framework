@@ -96,7 +96,7 @@ abstract class AbstractMiddlewareChain implements Countable
      *
      * @throws RuntimeException
      */
-    protected function prepareStack(callable $kernel = null): void
+    protected function prepareStack(?callable $kernel = null): void
     {
         if (null !== $this->stack) {
             throw new RuntimeException('Middleware stack can only be seeded once.');

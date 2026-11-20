@@ -38,7 +38,7 @@ if (!function_exists('env')) {
      *
      * @return mixed
      */
-    function env(string $key = null, $default = null)
+    function env(?string $key = null, $default = null)
     {
         if (!$key) {
             return $_SERVER;
@@ -108,7 +108,7 @@ if (!function_exists('config')) {
      *
      * @return mixed
      */
-    function config(string $key = null, $default = null)
+    function config(?string $key = null, $default = null)
     {
         if (!BeanFactory::hasBean('config')) {
             return sprintf('${.config.%s}', $key);

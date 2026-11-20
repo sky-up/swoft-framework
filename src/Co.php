@@ -16,14 +16,18 @@ use Swoft\Context\Context;
 use Swoft\Log\Debug;
 use Swoft\Log\Error;
 use Swoft\Log\Helper\CLog;
-use Swoft\Server\Helper\ServerHelper;
 use Swoft\Stdlib\Helper\PhpHelper;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Scheduler;
-use Swoole\Event;
 use Throwable;
 use function count;
+use function fgets;
+use function fread;
+use function function_exists;
+use function fwrite;
+use function method_exists;
 use function sgo;
+use function stream_get_contents;
 
 /**
  * Class Co
@@ -81,22 +85,18 @@ class Co
         // Is coroutine to return
         if (self::id() > 0) {
             CLog::warning('Already is in coroutine, not need to use `run`!');
-            return PhpHelper::call($callable, ... $args);
+            return (bool)PhpHelper::call($callable, ...$args);
         }
 
-        // >= 4.4
-        if (ServerHelper::isGteSwoole44()) {
-            $scheduler = new Scheduler;
-            $scheduler->add($callable, ...$args);
-
-            return $scheduler->start();
+        // Swoole >= 4.4 / 5.0 / 6.0 native Coroutine\run
+        if (function_exists('Swoole\Coroutine\run')) {
+            return (bool)\Swoole\Coroutine\run($callable, ...$args);
         }
 
-        // < 4.4
-        Coroutine::create($callable, ...$args);
-        Event::wait();
+        $scheduler = new Scheduler();
+        $scheduler->add($callable, ...$args);
 
-        return true;
+        return (bool)$scheduler->start();
     }
 
     /**
@@ -257,17 +257,18 @@ class Co
      */
     public static function getPcid(): int
     {
-        return Coroutine::getPcid();
+        $pcid = Coroutine::getPcid();
+        return $pcid === false ? -1 : $pcid;
     }
 
     /**
      * @param int|null $cid
      *
-     * @return Coroutine\Context
+     * @return Coroutine\Context|null
      */
-    public static function getContext(int $cid = null): Coroutine\Context
+    public static function getContext(?int $cid = null): ?Coroutine\Context
     {
-        return Coroutine::getContext($cid);
+        return Coroutine::getContext($cid ?? 0);
     }
 
     /**
@@ -331,7 +332,13 @@ class Co
      */
     public static function fread($handle, int $length = 0): string
     {
-        $result = Coroutine::fread($handle, $length);
+        if (method_exists(Coroutine::class, 'fread')) {
+            $result = Coroutine::fread($handle, $length);
+        } else {
+            // Swoole 5/6 removed Coroutine::fread() in favor of SWOOLE_HOOK_FILE on native stream functions.
+            $result = $length > 0 ? fread($handle, $length) : stream_get_contents($handle);
+        }
+
         if ($result === false) {
             throw new RuntimeException('Fread file error!');
         }
@@ -347,7 +354,7 @@ class Co
      */
     public static function fgets($handle): string
     {
-        $result = Coroutine::fgets($handle);
+        $result = method_exists(Coroutine::class, 'fgets') ? Coroutine::fgets($handle) : fgets($handle);
         if ($result === false) {
             throw new RuntimeException('Fgets file error!');
         }
@@ -365,7 +372,12 @@ class Co
      */
     public static function fwrite($handle, string $data, int $length = 0): int
     {
-        $result = Coroutine::fwrite($handle, $data, $length);
+        if (method_exists(Coroutine::class, 'fwrite')) {
+            $result = Coroutine::fwrite($handle, $data, $length);
+        } else {
+            $result = $length > 0 ? fwrite($handle, $data, $length) : fwrite($handle, $data);
+        }
+
         if ($result === false) {
             throw new RuntimeException('Fwrite file error! data=' . $data);
         }

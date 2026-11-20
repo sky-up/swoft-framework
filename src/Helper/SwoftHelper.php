@@ -46,10 +46,10 @@ class SwoftHelper
      * @param string $minPhp
      * @param string $minSwoole
      */
-    public static function checkRuntime(string $minPhp = '7.1', string $minSwoole = '4.4.1'): void
+    public static function checkRuntime(string $minPhp = '8.1.0', string $minSwoole = '6.0.0'): void
     {
         if (version_compare(PHP_VERSION, $minPhp, '<')) {
-            throw new RuntimeException('Run the server requires PHP version > ' . $minPhp . '! current is ' . PHP_VERSION);
+            throw new RuntimeException('Run the server requires PHP version >= ' . $minPhp . '! Current is ' . PHP_VERSION);
         }
 
         if (!extension_loaded('swoole')) {
@@ -57,7 +57,7 @@ class SwoftHelper
         }
 
         if (version_compare(SWOOLE_VERSION, $minSwoole, '<')) {
-            throw new RuntimeException('Run the server requires swoole version > ' . $minSwoole . '! current is ' . SWOOLE_VERSION);
+            throw new RuntimeException('Run the server requires swoole version >= ' . $minSwoole . '! Current is ' . SWOOLE_VERSION);
         }
 
         $conflicts = [
