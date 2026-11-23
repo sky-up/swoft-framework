@@ -21,10 +21,12 @@ use Swoole\Coroutine;
 use Swoole\Coroutine\Scheduler;
 use Throwable;
 use function count;
+use function defined;
 use function fgets;
 use function fread;
 use function function_exists;
 use function fwrite;
+use function is_array;
 use function method_exists;
 use function sgo;
 use function stream_get_contents;
@@ -90,6 +92,7 @@ class Co
 
         // Swoole >= 4.4 / 5.0 / 6.0 native Coroutine\run
         if (function_exists('Swoole\Coroutine\run')) {
+            self::ensureDefaultHookFlags();
             return (bool)\Swoole\Coroutine\run($callable, ...$args);
         }
 
@@ -97,6 +100,29 @@ class Co
         $scheduler->add($callable, ...$args);
 
         return (bool)$scheduler->start();
+    }
+
+    /**
+     * Ensure default coroutine hook flags exclude cURL hooks unless explicitly configured.
+     */
+    private static function ensureDefaultHookFlags(): void
+    {
+        if (method_exists(Coroutine::class, 'getOptions')) {
+            $options = Coroutine::getOptions();
+            if (is_array($options) && isset($options['hook_flags'])) {
+                return;
+            }
+        }
+
+        $flags = defined('SWOOLE_HOOK_ALL') ? SWOOLE_HOOK_ALL : 0;
+        if (defined('SWOOLE_HOOK_CURL')) {
+            $flags &= ~SWOOLE_HOOK_CURL;
+        }
+        if (defined('SWOOLE_HOOK_NATIVE_CURL')) {
+            $flags &= ~SWOOLE_HOOK_NATIVE_CURL;
+        }
+
+        Coroutine::set(['hook_flags' => $flags]);
     }
 
     /**
